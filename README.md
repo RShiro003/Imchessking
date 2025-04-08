@@ -1,12 +1,12 @@
-# Camera Calibration Results
+# 렌즈 왜곡 보정 프로젝트
 
-## Overview
-This document presents the results of the **camera calibration** process using a chessboard pattern. The calibration was performed by capturing a video of the chessboard from various angles and applying camera calibration techniques to calculate the intrinsic parameters of the camera.
+## 개요
+이 프로젝트는 **카메라 캘리브레이션**을 통해 얻은 데이터로 **렌즈 왜곡 보정**을 수행하는 프로젝트입니다. 체스보드 패턴을 사용하여 카메라를 캘리브레이션하고, 그 결과 얻어진 카메라 매트릭스와 왜곡 계수를 사용하여 동영상에서 발생한 렌즈 왜곡을 보정합니다.
 
-## Calibration Data
-The camera calibration parameters used for distortion correction are:
+## 캘리브레이션 데이터
+렌즈 왜곡 보정을 위해 사용된 **카메라 캘리브레이션 데이터**는 다음과 같습니다:
 
-### Camera Matrix (Intrinsic Parameters):
+### 카메라 매트릭스 (내부 파라미터):
 ```python
 mtx = np.array([[823.37, 0, 1005.50],
                 [0, 835.81, 545.83],
