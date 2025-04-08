@@ -27,12 +27,4 @@
 > ※ 아래는 실제 출력된 Camera Matrix입니다:
 
 
----
-
-## 🎞️ 렌즈 왜곡 보정 결과 데모
-
-### 📼 보정 적용 영상  
-`IMG_4213.avi` 영상에 보정이 적용되었습니다.
-
-```python
-video_path = r'C:\Project\Imchessking\IMG_4213.avi'
+![보정 결과 이미지](./02.png)
