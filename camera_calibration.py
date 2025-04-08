@@ -19,10 +19,12 @@ object_points_all = []  # 3D 좌표
 image_points_all = []  # 2D 이미지 좌표
 
 # 영상 파일 경로 (체스보드가 찍힌 이미지 파일들)
-images = glob.glob('data/*.jpg')  # 자신의 이미지 경로로 수정
+images = glob.glob('C:\iCloudDrive\Seoultceh\3\CV\homework\Week04\Imchessking\chessboard1.jpg')  # 자신의 이미지 경로로 수정
 
 for image_file in images:
     img = cv2.imread(image_file)
+
+    # 이미지를 그레이스케일로 변환
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
     # 체스보드 코너 찾기
