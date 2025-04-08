@@ -1,11 +1,10 @@
 import numpy as np
 import cv2
-import glob
 
-# 체스보드 패턴 크기
-chessboard_size = (9, 6)  # 체스보드의 내부 코너 수 (가로 9, 세로 6)
+# 체스보드 크기 (내부 코너 수)
+chessboard_size = (9, 6)
 
-# 3D 세계 좌표 준비 (0,0,0 부터 시작하는 체스보드 코너 좌표)
+# 3D 좌표 준비
 object_points = []
 for i in range(chessboard_size[1]):
     for j in range(chessboard_size[0]):
@@ -16,30 +15,52 @@ object_points = object_points.reshape(-1, 3)
 
 # 저장할 변수들
 object_points_all = []  # 3D 좌표
-image_points_all = []  # 2D 이미지 좌표
+image_points_all = []   # 2D 이미지 좌표
 
-# 영상 파일 경로 (체스보드가 찍힌 이미지 파일들)
-images = glob.glob('C:\iCloudDrive\Seoultceh\3\CV\homework\Week04\Imchessking\chessboard1.jpg')  # 자신의 이미지 경로로 수정
+# 동영상 파일 경로 (수정된 경로)
+video_path = r'C:\Project\Imchessking\IMG_4213.avi'  # 원시 문자열로 수정
 
-for image_file in images:
-    img = cv2.imread(image_file)
+# 동영상 파일 열기
+cap = cv2.VideoCapture(video_path)
 
-    # 이미지를 그레이스케일로 변환
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+# 동영상이 정상적으로 열렸는지 확인
+if not cap.isOpened():
+    print("동영상을 열 수 없습니다. 경로를 확인하세요.")
+    exit()
 
-    # 체스보드 코너 찾기
-    ret, corners = cv2.findChessboardCorners(gray, chessboard_size)
+frame_count = 0
+frame_skip = 5  # 5번째 프레임마다 처리 (속도 개선)
 
-    if ret:
-        image_points_all.append(corners)
-        object_points_all.append(object_points)
+while cap.isOpened():
+    ret, frame = cap.read()
+    if not ret:
+        break
 
-        # 코너 위치 그리기
-        img = cv2.drawChessboardCorners(img, chessboard_size, corners, ret)
-        cv2.imshow('Chessboard corners', img)
-        cv2.waitKey(500)
+    # 매 프레임마다 처리하지 않고, 특정 프레임만 처리
+    if frame_count % frame_skip == 0:
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)  # 그레이스케일로 변환
 
+        # 체스보드 코너 찾기
+        ret, corners = cv2.findChessboardCorners(gray, chessboard_size)
+
+        if ret:
+            image_points_all.append(corners)
+            object_points_all.append(object_points)
+
+            # 코너 위치 그리기
+            frame = cv2.drawChessboardCorners(frame, chessboard_size, corners, ret)
+            cv2.imshow('Chessboard corners', frame)  # 체스보드 코너 그린 영상 출력
+            cv2.waitKey(500)  # 500ms 동안 기다리며 보여주기
+
+    frame_count += 1
+
+cap.release()
 cv2.destroyAllWindows()
+
+# 체스보드 이미지가 하나라도 검출되었는지 확인
+if len(object_points_all) == 0:
+    print("체스보드 코너를 찾을 수 없습니다. 동영상을 확인하고 다시 시도하십시오.")
+    exit()
 
 # 카메라 캘리브레이션 수행
 ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(object_points_all, image_points_all, gray.shape[::-1], None, None)
